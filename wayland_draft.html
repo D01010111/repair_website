@@ -1,0 +1,445 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  Zap, 
+  ShieldCheck, 
+  Clock, 
+  Search, 
+  Cpu, 
+  Wrench, 
+  Hammer, 
+  BarChart3, 
+  ChevronRight, 
+  TrendingDown, 
+  AlertCircle,
+  Package,
+  CheckCircle2,
+  Lock,
+  ArrowRight,
+  HardHat,
+  Gauge,
+  Info
+} from 'lucide-react';
+
+const App = () => {
+  const [activeTab, setActiveTab] = useState('retail');
+  // Scale shifted to PH/s for larger operations
+  const [hashrate, setHashrate] = useState(10); // PH/s
+  // Hashprice is typically quoted in USD/PH/Day (Hashrate Index standard)
+  const [hashPrice, setHashPrice] = useState(45.00); 
+  const [queueCount, setQueueCount] = useState(14);
+
+  // Simulate live maintenance queue fluctuations
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQueueCount(prev => Math.max(10, Math.min(30, prev + (Math.random() > 0.5 ? 1 : -1))));
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Calculation: Hashrate (PH) * Hashprice ($/PH/Day)
+  const dailyLoss = useMemo(() => hashrate * hashPrice, [hashrate, hashPrice]);
+  const weeklyLoss = dailyLoss * 7;
+  const monthlyLoss = dailyLoss * 30;
+
+  return (
+    
+    <div className="min-h-screen bg-black text-slate-100 font-sans selection:bg-yellow-400 selection:text-black">
+      {/* --- TOP NAV --- */}
+      <nav className="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-black tracking-tighter uppercase text-white">WAY<span className="text-yellow-400">LAND</span></span>
+          </div>
+          <div className="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-slate-400">
+            <a href="#standards" className="hover:text-yellow-400 transition-colors">Standards</a>
+            <a href="#workflow" className="hover:text-yellow-400 transition-colors">Workflow</a>
+            <a href="#pricing" className="hover:text-yellow-400 transition-colors">Fleet Plans</a>
+            <button className="text-white border-l border-white/10 pl-8 hover:text-yellow-400 transition-all">
+              Client Login
+            </button>
+            <button className="bg-yellow-400 hover:bg-yellow-300 text-black px-6 py-2 rounded font-black transition-all">
+              Request Service
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* --- HERO SECTION WITH FIXED PARALLAX BACKGROUND --- */}
+      <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+        {/* Parallax Background Layer */}
+        <div 
+          className="absolute inset-0 bg-fixed bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: `url('screen.jpg')`,
+            // Fallback to a high-quality industrial tech image if screen.jpg isn't available
+            backgroundColor: '#000'
+          }}
+        >
+          {/* Overlay for depth and contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-yellow-400/5 mix-blend-overlay" />
+        </div>
+
+        {/* Industrial Grid Overlay (Fixed Position) */}
+        <div 
+          className="absolute inset-0 opacity-[0.05] pointer-events-none" 
+          style={{ 
+            backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', 
+            backgroundSize: '60px 60px' 
+          }}
+        />
+
+        <div className="max-w-6xl mx-auto px-6 relative z-10 text-left">
+          <div className="inline-flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 backdrop-blur-md px-4 py-1.5 rounded text-yellow-500 text-[10px] font-black tracking-[0.2em] uppercase mb-8 shadow-xl">
+            <ShieldCheck className="w-3.5 h-3.5" /> Industrial Grade Maintenance Excellence
+          </div>
+          <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] mb-8 uppercase drop-shadow-2xl">
+            RECLAIM YOUR <br />
+            <span className="text-yellow-400 italic">UPTIME.</span>
+          </h1>
+          <p className="text-lg md:text-2xl text-slate-300 max-w-2xl mb-12 font-medium leading-relaxed border-l-4 border-yellow-400 pl-6 drop-shadow-md">
+            We don't just "fix" miners. We restore them to factory-spec efficiency. Precision component-level maintenance designed for industrial persistent operations.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <button className="w-full sm:w-auto px-10 py-5 bg-yellow-400 hover:bg-yellow-300 text-black text-lg font-black rounded shadow-2xl shadow-yellow-400/20 transition-all flex items-center justify-center gap-3 group">
+              OPEN MAINTENANCE TICKET 
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+            <button 
+              onClick={() => document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' })}
+              className="w-full sm:w-auto px-10 py-5 bg-black/40 backdrop-blur-md hover:bg-white/10 text-white text-lg font-bold rounded border border-white/20 transition-all flex items-center justify-center gap-3"
+            >
+              ROI IMPACT ANALYSIS
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* --- STATS BAR --- */}
+      <section className="border-y border-white/5 py-10 bg-zinc-950/50 backdrop-blur-sm relative z-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center text-left">
+            <div>
+              <div className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Fleet Managed</div>
+              <div className="text-4xl font-black text-white">45,000<span className="text-yellow-400">+</span></div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Est. Revenue Restored</div>
+              <div className="text-4xl font-black text-white">$22.4M</div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">MTBF Improvement</div>
+              <div className="text-4xl font-black text-white">32%</div>
+            </div>
+            <div>
+              <div className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-1">Current Lead Time</div>
+              <div className="text-4xl font-black text-yellow-400">4-6 Days</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FINANCIAL IMPACT CALCULATOR --- */}
+      <section id="calculator" className="py-24 px-6 relative bg-black z-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-20 items-center">
+            <div>
+              <h2 className="text-4xl font-black mb-6 flex items-center gap-4 uppercase italic text-white">
+                <TrendingDown className="text-red-600 w-10 h-10" />
+                Downtime is Theft.
+              </h2>
+              <p className="text-slate-400 text-lg mb-10 leading-relaxed">
+                Profitability at scale is a game of marginal gains and maximum uptime. Use the tool below to calculate your daily operational leakage based on current Hashrate Index data.
+              </p>
+              
+              <div className="space-y-8">
+                {/* Petahash Input */}
+                <div className="p-8 bg-zinc-900 rounded border border-white/5">
+                  <div className="flex justify-between items-center mb-6">
+                    <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-black">Impacted Hashrate (PH/s)</label>
+                    <span className="text-[10px] bg-white/5 text-slate-400 px-2 py-0.5 rounded border border-white/10 font-bold uppercase tracking-widest">Enterprise Scale</span>
+                  </div>
+                  <input 
+                    type="range" min="1" max="1000" step="1" 
+                    value={hashrate} 
+                    onChange={(e) => setHashrate(parseInt(e.target.value))}
+                    className="w-full accent-yellow-400 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="text-5xl font-black mt-6 text-yellow-400 tabular-nums">
+                    {hashrate} <span className="text-2xl text-yellow-400/50">PH/s</span>
+                  </div>
+                </div>
+
+                {/* Hashprice Input */}
+                <div className="p-8 bg-zinc-900 rounded border border-white/5">
+                  <div className="flex justify-between items-center mb-6">
+                    <label className="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-black italic">Current Hashprice (USD/PH/Day)</label>
+                    <div className="flex items-center gap-1.5 text-[9px] text-yellow-500/80 font-bold uppercase tracking-widest">
+                      <Info className="w-3 h-3" /> Live Override Enabled
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="relative">
+                      <span className="absolute left-0 bottom-1.5 text-slate-500 text-2xl font-black">$</span>
+                      <input 
+                        type="number" step="0.01"
+                        value={hashPrice} 
+                        onChange={(e) => setHashPrice(parseFloat(e.target.value))}
+                        className="bg-transparent text-4xl font-black text-white outline-none pl-6 w-36 border-b-2 border-yellow-400/20 focus:border-yellow-400 transition-all tabular-nums"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-1">Market Reference</div>
+                      <div className="text-xs font-bold text-slate-400">Hashrate Index: ~$45.00</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-zinc-950 p-10 rounded shadow-2xl relative border-t-4 border-red-600">
+              <div className="flex justify-between items-start mb-12">
+                <h3 className="text-lg font-black uppercase tracking-tighter text-slate-300">Revenue Void Assessment</h3>
+                <AlertCircle className="text-red-600 w-6 h-6 animate-pulse" />
+              </div>
+              
+              <div className="space-y-10">
+                <div className="flex justify-between items-end">
+                  <div className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Daily Leakage</div>
+                  <div className="text-4xl font-black text-white tabular-nums">
+                    ${dailyLoss.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                  </div>
+                </div>
+                <div className="flex justify-between items-end">
+                  <div className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Weekly Deficit</div>
+                  <div className="text-4xl font-black text-white tabular-nums">
+                    ${weeklyLoss.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                  </div>
+                </div>
+                <div className="pt-8 border-t border-white/10 flex justify-between items-center">
+                  <div className="text-xs text-red-500 font-bold uppercase tracking-widest">Monthly Capital Drain</div>
+                  <div className="text-6xl font-black text-red-600 tabular-nums">
+                    ${monthlyLoss.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})}
+                  </div>
+                </div>
+              </div>
+
+              <button className="w-full mt-12 py-6 bg-red-600 hover:bg-red-700 text-white text-lg font-black rounded transition-all shadow-lg shadow-red-600/20 uppercase tracking-widest">
+                Recover lost revenue
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- MAINTENANCE STANDARDS --- */}
+      <section id="standards" className="py-24 px-6 border-t border-white/5 bg-zinc-950">
+        <div className="max-w-7xl mx-auto text-left mb-20">
+          <h2 className="text-5xl font-black mb-6 uppercase italic tracking-tighter text-white">Maintenance <span className="text-yellow-400 font-black">Excellence.</span></h2>
+          <p className="text-slate-500 text-lg max-w-2xl font-medium leading-relaxed">We operate at the intersection of electrical engineering and industrial efficiency. No "quick fixes"—only sustainable restoration.</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              icon: <Gauge className="w-8 h-8" />,
+              title: "Digital Profiling",
+              desc: "Every board undergoes kernel-level diagnostic profiling to map domain health and efficiency curves before a single tool is touched."
+            },
+            {
+              icon: <Hammer className="w-8 h-8" />,
+              title: "Component Rework",
+              desc: "Industrial BGA stations and IPC-certified techniques. We use high-lead-count solder and high-conductivity thermal interface materials."
+            },
+            {
+              icon: <HardHat className="w-8 h-8" />,
+              title: "Load Stress Testing",
+              desc: "72-hour sustained load-bearing tests in controlled thermal environments. We don't verify 'it works'; we verify it stays working."
+            }
+          ].map((item, idx) => (
+            <div key={idx} className="bg-black border border-white/5 p-10 rounded-lg hover:border-yellow-400/40 transition-all group">
+              <div className="text-yellow-400 mb-8 group-hover:scale-110 transition-transform">
+                {item.icon}
+              </div>
+              <h3 className="text-xl font-black mb-4 uppercase tracking-tighter text-white">{item.title}</h3>
+              <p className="text-slate-500 leading-relaxed text-sm font-medium">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* --- WORKFLOW / THE PROTOCOL --- */}
+      <section id="workflow" className="py-24 px-6 bg-yellow-400">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div className="text-black">
+              <h2 className="text-5xl font-black mb-10 leading-[0.9] uppercase italic tracking-tighter">
+                The Maintenance <br />Standard Operating Procedure
+              </h2>
+              <div className="space-y-8">
+                {[
+                  "Automated Hashboard Health Triage",
+                  "Ultrasonic Decontamination & Scaling",
+                  "Precision ASIC Replacement (New-Gen Silicons)",
+                  "Heat Sink Re-Alignment & Thermal Hardening",
+                  "Full-Duty Validation & Telemetry Review"
+                ].map((step, idx) => (
+                  <div key={idx} className="flex items-center gap-6 group">
+                    <div className="w-10 h-10 border-2 border-black flex items-center justify-center font-black flex-shrink-0 group-hover:bg-black group-hover:text-yellow-400 transition-all">
+                      {idx + 1}
+                    </div>
+                    <p className="text-lg font-black uppercase tracking-tight">{step}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="aspect-square bg-black p-1 rounded-sm shadow-2xl flex items-center justify-center overflow-hidden">
+                <div className="w-full h-full border-2 border-white/5 flex flex-col items-center justify-center p-12">
+                   <Wrench className="w-24 h-24 text-yellow-400 mb-6 animate-pulse" />
+                   <div className="text-yellow-400 font-mono text-[10px] uppercase tracking-[0.4em] font-black">Engineering Mode</div>
+                   <div className="text-white text-2xl font-black mt-2 tracking-widest uppercase">SYST_ACTIVE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- PRICING --- */}
+      <section id="pricing" className="py-24 px-6 bg-black">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
+            <div>
+              <h2 className="text-5xl font-black mb-4 uppercase italic tracking-tighter text-white">Service tiers</h2>
+              <p className="text-slate-500 text-lg font-medium">Clear pricing for miners who value uptime over everything else.</p>
+            </div>
+            <div className="bg-zinc-900 p-1 rounded flex border border-white/10">
+              <button 
+                onClick={() => setActiveTab('retail')}
+                className={`px-8 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'retail' ? 'bg-yellow-400 text-black' : 'text-slate-500 hover:text-white'}`}
+              >
+                Retail
+              </button>
+              <button 
+                onClick={() => setActiveTab('enterprise')}
+                className={`px-8 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === 'enterprise' ? 'bg-yellow-400 text-black' : 'text-slate-500 hover:text-white'}`}
+              >
+                Fleet
+              </button>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-zinc-950 p-12 rounded border border-white/5 flex flex-col hover:border-white/10 transition-all">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6">Level 01: Maintenance</div>
+              <div className="text-4xl font-black mb-10 tabular-nums text-white">$95 <span className="text-xs text-slate-500 font-bold tracking-widest uppercase">/ Unit</span></div>
+              <ul className="space-y-6 flex-grow mb-12">
+                <li className="flex items-center gap-4 text-slate-400 text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> 6-Day Restoration</li>
+                <li className="flex items-center gap-4 text-slate-400 text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> 45-Day Limited Warranty</li>
+                <li className="flex items-center gap-4 text-slate-400 text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> Full Log Analysis</li>
+              </ul>
+              <button className="w-full py-4 border border-white/10 hover:border-yellow-400 hover:text-yellow-400 text-white text-[10px] font-black uppercase tracking-widest transition-all">
+                Select Plan
+              </button>
+            </div>
+
+            <div className="bg-zinc-900 p-12 rounded border-2 border-yellow-400 relative flex flex-col shadow-2xl shadow-yellow-400/10 scale-105 z-10">
+              <div className="absolute -top-3 left-10 bg-yellow-400 text-black px-4 py-1 text-[10px] font-black uppercase tracking-widest italic">Preferred</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-yellow-400 mb-6">Level 02: Performance</div>
+              <div className="text-4xl font-black mb-10 tabular-nums text-white">$145 <span className="text-xs text-slate-500 font-bold tracking-widest uppercase">/ Unit</span></div>
+              <ul className="space-y-6 flex-grow mb-12">
+                <li className="flex items-center gap-4 text-white text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> 72-Hour Rapid Return</li>
+                <li className="flex items-center gap-4 text-white text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> 120-Day Extended Warranty</li>
+                <li className="flex items-center gap-4 text-white text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> Thermal Imprint Report</li>
+                <li className="flex items-center gap-4 text-white text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> Discounted Logistics</li>
+              </ul>
+              <button className="w-full py-4 bg-yellow-400 hover:bg-yellow-300 text-black text-[10px] font-black uppercase tracking-widest transition-all">
+                Open Priority Ticket
+              </button>
+            </div>
+
+            <div className="bg-zinc-950 p-12 rounded border border-white/5 flex flex-col hover:border-white/10 transition-all">
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6">Level 03: Infrastructure</div>
+              <div className="text-4xl font-black mb-10 text-white italic uppercase tracking-tighter">Inquiry</div>
+              <ul className="space-y-6 flex-grow mb-12">
+                <li className="flex items-center gap-4 text-slate-400 text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> On-Site Site Engineering</li>
+                <li className="flex items-center gap-4 text-slate-400 text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> Lifecycle Asset Management</li>
+                <li className="flex items-center gap-4 text-slate-400 text-sm font-bold"><CheckCircle2 className="w-4 h-4 text-yellow-400" /> Dedicated SLA Agreement</li>
+              </ul>
+              <button className="w-full py-4 border border-white/10 hover:border-yellow-400 hover:text-yellow-400 text-white text-[10px] font-black uppercase tracking-widest transition-all">
+                Contact Enterprise
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FINAL CTA --- */}
+      <section className="py-24 px-6 border-t border-white/5 bg-black overflow-hidden text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-5xl font-black mb-8 uppercase italic tracking-tighter text-white">Stop Guessing. <br /><span className="text-yellow-400 font-black">Start Hashing.</span></h2>
+          <p className="text-slate-500 text-lg mb-12 font-medium">Your hardware is built for one purpose: uptime. We ensure it fulfills that mission.</p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button className="px-10 py-5 bg-white text-black font-black uppercase tracking-widest rounded hover:bg-yellow-400 transition-all text-xs">
+              Initialize Service
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+      <footer className="py-20 px-6 border-t border-white/5 bg-zinc-950">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-center md:text-left">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-black tracking-tighter uppercase text-white">WAY<span className="text-yellow-400">LAND</span></span>
+          </div>
+          <div className="flex gap-10 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+            <a href="#" className="hover:text-yellow-400">Terms</a>
+            <a href="#" className="hover:text-yellow-400">Privacy</a>
+            <a href="#" className="hover:text-yellow-400">SLA</a>
+            <a href="#" className="hover:text-yellow-400">Logistics</a>
+          </div>
+          <div className="text-xs font-bold text-slate-600 uppercase tracking-widest">
+            © 2024 WAYLAND OPERATIONS.
+          </div>
+        </div>
+      </footer>
+
+      {/* --- STICKY STATUS TICKER (MOBILE) --- */}
+      <div className="fixed bottom-0 left-0 w-full bg-yellow-400 p-3 z-[100] md:hidden shadow-[0_-4px_20px_rgba(250,204,21,0.2)]">
+        <div className="flex items-center justify-between px-4">
+          <div className="flex items-center gap-3 text-black">
+             <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
+              </span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Active load: {queueCount} PH/s equivalent</span>
+          </div>
+          <button className="bg-black text-white px-4 py-1.5 rounded text-[10px] font-black uppercase tracking-widest">
+            Book Service
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Ticker */}
+      <div className="fixed bottom-10 right-10 hidden lg:flex flex-col items-end gap-3 z-50 pointer-events-none">
+        <div className="bg-zinc-900 border border-white/10 px-6 py-3 rounded shadow-2xl flex items-center gap-4">
+          <div className="text-right">
+            <div className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-0.5">Global Load</div>
+            <div className="text-sm font-black text-white uppercase italic">{queueCount} Units In-Process</div>
+          </div>
+          <div className="h-8 w-px bg-white/10" />
+          <div className="text-right">
+             <div className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-0.5">Avg Turnaround</div>
+             <div className="text-sm font-black text-yellow-400 uppercase italic">4.2 Days</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
